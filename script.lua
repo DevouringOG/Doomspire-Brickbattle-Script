@@ -1,89 +1,101 @@
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
 
-getgenv().SecureMode = true
+--DestroyKillPlate--
+game:GetService('Workspace').Kill:Destroy()
 
-Rayfield:LoadConfiguration()
+--variables--
+getgenv().WalkSpeedValue = 16
+getgenv().JumpPowerValue = 50
 
-local Window = Rayfield:CreateWindow({
-    Name = "Doomspire Brickbattle Script",
-    LoadingTitle = "Loading...",
-    LoadingSubtitle = "glhf",
-    ConfigurationSaving = {
-       Enabled = true,
-       FolderName = 'Teleporting', -- Create a custom folder for your hub/game
-       FileName = "Hub"
-    },
-    })
-    
-    local Tab = Window:CreateTab("Teleport", 4483362458)
-    local Section = Tab:CreateSection("Section RED")
-    Section:Set("RED")
-    
-    --RED--
-    local Button = Tab:CreateButton({
-    Name = "RED DOWN",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-130, 24, -1)
-    end,
-    })
-    local Button = Tab:CreateButton({
-    Name = "RED UP",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-104, 129, 0)
-    end,
-    })
+--NoClipFunction--
+local function onTouched(part)
+    if _G.Noclip == true then
+        part.CanCollide = false
+        wait(3)
+        part.CanCollide = true
+    end
+end
+
+--GetCFrameFunction--
+
+local function GetPlayerCFrame(PlayerName) return game:GetService("Workspace")[PlayerName].HumanoidRootPart.CFrame end
+
+--Players list--
+getgenv().PlayersName = {}
+
+for i, v in game.Players:GetChildren() do
+    table.insert(PlayersName, tostring(v))
+end
+
+--UI--
+local UI = Material.Load({
+     Title = "Getting Started",
+     Style = 1,
+     SizeX = 400,
+     SizeY = 500,
+     Theme = "Dark"
+})
+
+local MainPage = UI.New({
+	Title = "Main"
+})
+
+local TpPlayers = MainPage.Dropdown({
+	Text = "Tp to player",
+	Callback = function(PlayerName)
+		game.Players.LocalPlayer.Character:WaitForChild('HumanoidRootPart').CFrame = GetPlayerCFrame(PlayerName)
+	end,
+	Options = PlayersName
+})
+
+local WalkSpeedSlider = MainPage.Slider({
+	Text = "WalkSpeed",
+	Callback = function(Value)
+		WalkSpeedValue = Value
+	end,
+	Min = 0,
+	Max = 100,
+	Def = 16
+})
+
+local JumpPowerSlider = MainPage.Slider({
+	Text = "JumpPower",
+	Callback = function(Value)
+		JumpPowerValue = Value
+	end,
+	Min = 0,
+	Max = 1000,
+	Def = 50
+})
+
+local NoClipToggle = MainPage.Toggle({
+	Text = "NoClip",
+	Callback = function(Value)
+		_G.Noclip = Value
+        if game.Players.LocalPlayer.Character:WaitForChild("Head") then
+            game.Players.LocalPlayer.Character:WaitForChild("Head").Touched:Connect(onTouched)
+		end
+	end,
+	Enabled = false
+})
 
 
 
 
-    local Section = Tab:CreateSection("Section GREEN")
-    Section:Set("GREEN")
-    --GREEN--
-    local Button = Tab:CreateButton({
-    Name = "GREEN DOWN",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1, 24, -130)
-    end,
-    })
-    local Button = Tab:CreateButton({
-    Name = "GREEN UP",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 129, -102)
-    end,
-    })
+--ChangeWalkSpeed--
+spawn(function()
+            while wait(0.1) do
+                if game.Players.LocalPlayer.Character:findFirstChild("Humanoid") then
+                    game.Players.LocalPlayer.Character:findFirstChild("Humanoid").WalkSpeed = WalkSpeedValue
+                end
+            end
+        end)
 
-
-
-    local Section = Tab:CreateSection("Section BLUE")
-    Section:Set("BLUE")
-    --BLUE--
-    local Button = Tab:CreateButton({
-    Name = "BLUE DOWN",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1, 24, 130)
-    end,
-    })
-    local Button = Tab:CreateButton({
-    Name = "BLUE UP",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 129, 102)
-    end,
-    })
-
-
-
-    local Section = Tab:CreateSection("Section YELLOW")
-    Section:Set("YELLOW")
-    --YELLOW--
-    local Button = Tab:CreateButton({
-    Name = "YELLOW DOWN",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(130, 24, -1)
-    end,
-    })
-    local Button = Tab:CreateButton({
-    Name = "YELLOW UP",
-    Callback = function()
-         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(104, 129, 0)
-    end,
-    })
+--ChangeJumpPower--
+spawn(function()
+            while wait(0.1) do
+                if game.Players.LocalPlayer.Character:findFirstChild("Humanoid") then
+                    game.Players.LocalPlayer.Character:findFirstChild("Humanoid").JumpPower = JumpPowerValue
+                end
+            end
+        end)
