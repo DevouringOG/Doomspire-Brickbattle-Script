@@ -1,11 +1,14 @@
 local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
 
---DestroyKillPlate--
-game:GetService('Workspace').Kill:Destroy()
+--Ability to walk on BasePlate--
+game:GetService("Workspace").Baseplate.CanCollide = true
 
 --variables--
 getgenv().WalkSpeedValue = 16
 getgenv().JumpPowerValue = 50
+local skys = {["Orange"] = {"rbxassetid://600830446", "rbxassetid://600831635", "rbxassetid://600832720", "rbxassetid://600886090", "rbxassetid://600833862", "rbxassetid://600835177"}, 
+			["Galaxy"] = {"rbxassetid://159454299", "rbxassetid://159454296", "rbxassetid://159454293", "rbxassetid://159454286", "rbxassetid://159454300", "rbxassetid://159454288"}, 
+			["4K Realistic"] = {"rbxassetid://225469345", "rbxassetid://225469349", "rbxassetid://225469359", "rbxassetid://225469364", "rbxassetid://225469372", "rbxassetid://225469380"}}
 
 --NoClipFunction--
 local function onTouched(part)
@@ -17,8 +20,18 @@ local function onTouched(part)
 end
 
 --GetCFrameFunction--
-
 local function GetPlayerCFrame(PlayerName) return game:GetService("Workspace")[PlayerName].HumanoidRootPart.CFrame end
+
+--ChangeSkyFunction--
+local LightingSky = game:GetService('Lighting').Sky
+local function ChangeSky(SkyName)
+	LightingSky.SkyboxBk = skys[SkyName][1]
+	LightingSky.SkyboxDn = skys[SkyName][2]
+	LightingSky.SkyboxFt = skys[SkyName][3]
+	LightingSky.SkyboxLf = skys[SkyName][4]
+	LightingSky.SkyboxRt = skys[SkyName][5]
+	LightingSky.SkyboxUp = skys[SkyName][6]
+end
 
 --Players list--
 getgenv().PlayersName = {}
@@ -33,7 +46,7 @@ local UI = Material.Load({
      Style = 1,
      SizeX = 400,
      SizeY = 500,
-     Theme = "Dark"
+     Theme = "Mocha"
 })
 
 local MainPage = UI.New({
@@ -77,6 +90,14 @@ local NoClipToggle = MainPage.Toggle({
 		end
 	end,
 	Enabled = false
+})
+
+local ChangeSky = MainPage.Dropdown({
+	Text = "Change sky",
+	Callback = function(Sky)
+		ChangeSky(Sky)
+	end,
+	Options = {"Orange", "Galaxy", "4K Realistic"}
 })
 
 
