@@ -4,11 +4,16 @@ local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinl
 game:GetService("Workspace").Baseplate.CanCollide = true
 
 --variables--
-getgenv().WalkSpeedValue = 16
-getgenv().JumpPowerValue = 50
+local WalkSpeedValue = 16
+local JumpPowerValue = 50
 local skys = {["Orange"] = {"rbxassetid://600830446", "rbxassetid://600831635", "rbxassetid://600832720", "rbxassetid://600886090", "rbxassetid://600833862", "rbxassetid://600835177"}, 
 			["Galaxy"] = {"rbxassetid://159454299", "rbxassetid://159454296", "rbxassetid://159454293", "rbxassetid://159454286", "rbxassetid://159454300", "rbxassetid://159454288"}, 
 			["4K Realistic"] = {"rbxassetid://225469345", "rbxassetid://225469349", "rbxassetid://225469359", "rbxassetid://225469364", "rbxassetid://225469372", "rbxassetid://225469380"}}
+local basesBottomCFrames = {['RED'] = {-90, 3, 0},
+						['GREEN'] = {0, 3, -90}, 
+						['BLUE'] = {0, 3, 90}, 
+						['YELLOW'] = {90, 3, 0}, 
+						['MIDDLE'] = {0, 132, 0}}
 
 --NoClipFunction--
 local function onTouched(part)
@@ -34,10 +39,15 @@ local function ChangeSky(SkyName)
 end
 
 --Players list--
-getgenv().PlayersName = {}
-
+local PlayersName = {}
 for i, v in game.Players:GetChildren() do
     table.insert(PlayersName, tostring(v))
+end
+
+--GetThemesList--
+local themes = {}
+for i, v in game:GetService('ReplicatedStorage').Themes:GetChildren() do
+	table.insert(themes, tostring(v))
 end
 
 --UI--
@@ -61,6 +71,14 @@ local TpPlayers = MainPage.Dropdown({
 	Options = PlayersName
 })
 
+local TpBottomBases = MainPage.Dropdown({
+	Text = "Teleports",
+	Callback = function(Base)
+		game.Players.LocalPlayer.Character:WaitForChild('HumanoidRootPart').CFrame = CFrame.new(unpack(basesBottomCFrames[Base]))
+	end,
+	Options = {"RED", "GREEN", "BLUE", "YELLOW", "MIDDLE"}
+})
+
 local WalkSpeedSlider = MainPage.Slider({
 	Text = "WalkSpeed",
 	Callback = function(Value)
@@ -81,6 +99,16 @@ local JumpPowerSlider = MainPage.Slider({
 	Def = 50
 })
 
+local FieldOfViewSlider = MainPage.Slider({
+	Text = "FOV",
+	Callback = function(Value)
+		game:getService("Workspace").Camera.FieldOfView = Value
+	end,
+	Min = 0,
+	Max = 120,
+	Def = 70
+})
+
 local NoClipToggle = MainPage.Toggle({
 	Text = "NoClip",
 	Callback = function(Value)
@@ -90,6 +118,14 @@ local NoClipToggle = MainPage.Toggle({
 		end
 	end,
 	Enabled = false
+})
+
+local ChangeTheme = MainPage.Dropdown({
+	Text = "Change Theme",
+	Callback = function(Theme)
+		game.Players.LocalPlayer.Theme.Value = Theme
+	end,
+	Options = themes
 })
 
 local ChangeSky = MainPage.Dropdown({
