@@ -1,11 +1,12 @@
+--Import UI library
 local Material = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/MaterialLua/master/Module.lua"))()
 
 --Ability to walk on BasePlate--
 game:GetService("Workspace").Baseplate.CanCollide = true
 
 --variables--
-local WalkSpeedValue = 16
-local JumpPowerValue = 50
+getgenv().WalkSpeedValue = 16
+getgenv().JumpPowerValue = 50
 local skys = {["Orange"] = {"rbxassetid://600830446", "rbxassetid://600831635", "rbxassetid://600832720", "rbxassetid://600886090", "rbxassetid://600833862", "rbxassetid://600835177"}, 
 			["Galaxy"] = {"rbxassetid://159454299", "rbxassetid://159454296", "rbxassetid://159454293", "rbxassetid://159454286", "rbxassetid://159454300", "rbxassetid://159454288"}, 
 			["4K Realistic"] = {"rbxassetid://225469345", "rbxassetid://225469349", "rbxassetid://225469359", "rbxassetid://225469364", "rbxassetid://225469372", "rbxassetid://225469380"}}
@@ -38,7 +39,7 @@ local function ChangeSky(SkyName)
 	LightingSky.SkyboxUp = skys[SkyName][6]
 end
 
---Players list--
+--PlayersList--
 local PlayersName = {}
 for i, v in game.Players:GetChildren() do
     table.insert(PlayersName, tostring(v))
@@ -63,6 +64,7 @@ local MainPage = UI.New({
 	Title = "Main"
 })
 
+--Tp to players
 local TpPlayers = MainPage.Dropdown({
 	Text = "Tp to player",
 	Callback = function(PlayerName)
@@ -71,7 +73,8 @@ local TpPlayers = MainPage.Dropdown({
 	Options = PlayersName
 })
 
-local TpBottomBases = MainPage.Dropdown({
+--Teleports
+local Teleports = MainPage.Dropdown({
 	Text = "Teleports",
 	Callback = function(Base)
 		game.Players.LocalPlayer.Character:WaitForChild('HumanoidRootPart').CFrame = CFrame.new(unpack(basesBottomCFrames[Base]))
@@ -79,6 +82,7 @@ local TpBottomBases = MainPage.Dropdown({
 	Options = {"RED", "GREEN", "BLUE", "YELLOW", "MIDDLE"}
 })
 
+--Walk speed
 local WalkSpeedSlider = MainPage.Slider({
 	Text = "WalkSpeed",
 	Callback = function(Value)
@@ -89,6 +93,7 @@ local WalkSpeedSlider = MainPage.Slider({
 	Def = 16
 })
 
+--Jump power
 local JumpPowerSlider = MainPage.Slider({
 	Text = "JumpPower",
 	Callback = function(Value)
@@ -99,6 +104,7 @@ local JumpPowerSlider = MainPage.Slider({
 	Def = 50
 })
 
+--FOV
 local FieldOfViewSlider = MainPage.Slider({
 	Text = "FOV",
 	Callback = function(Value)
@@ -109,6 +115,7 @@ local FieldOfViewSlider = MainPage.Slider({
 	Def = 70
 })
 
+--NoClip
 local NoClipToggle = MainPage.Toggle({
 	Text = "NoClip",
 	Callback = function(Value)
@@ -120,6 +127,7 @@ local NoClipToggle = MainPage.Toggle({
 	Enabled = false
 })
 
+--Change theme
 local ChangeTheme = MainPage.Dropdown({
 	Text = "Change Theme",
 	Callback = function(Theme)
@@ -128,6 +136,7 @@ local ChangeTheme = MainPage.Dropdown({
 	Options = themes
 })
 
+--Change sky 
 local ChangeSky = MainPage.Dropdown({
 	Text = "Change sky",
 	Callback = function(Sky)
